@@ -25,4 +25,8 @@ mkdir -m 755 /elixir
 unzip /workspaces/airgap_app/packages/elixir-otp-28.zip -d /elixir/
 export PATH="$PATH:/elixir/bin/"
 
+
+# Live Reload dependency for inotify-tools
+rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+
 echo "postCreateCommand complete."

@@ -1,7 +1,7 @@
 defmodule AirgapAppWeb.ErrorHTML do
   use AirgapAppWeb, :html
 
-  def render("404.html", _assigns) do
+  def render("404.html", assigns) do
     ~H"""
     <div class="min-h-screen flex items-center justify-center bg-gray-100">
       <div class="text-center">
@@ -15,7 +15,7 @@ defmodule AirgapAppWeb.ErrorHTML do
     """
   end
 
-  def render("500.html", _assigns) do
+  def render("500.html", assigns) do
     ~H"""
     <div class="min-h-screen flex items-center justify-center bg-gray-100">
       <div class="text-center">

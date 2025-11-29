@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package airgap;
 
-option elixir_module_prefix = "AirgapApp.Proto";
-
 // Location update message for tracking entities
 message LocationUpdate {
   string id = 1;

@@ -41,6 +41,7 @@ defmodule AirgapApp.MixProject do
       
       # Protocol buffers
       {:protobuf, "~> 0.12.0"},
+      {:protox, "~> 1.7"},
       
       # H3 hexagonal indexing
       {:h3, "~> 3.7"},
@@ -55,7 +56,8 @@ defmodule AirgapApp.MixProject do
       {:telemetry_poller, "~> 1.0"},
       
       # Security
-      {:plug_crypto, "~> 2.0"}
+      {:plug_crypto, "~> 2.0"},
+      {:uuid, "~> 1.1"}
     ]
   end
 
