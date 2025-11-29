@@ -13,7 +13,7 @@ dnf config-manager --set-enabled ubi-9-baseos && dnf config-manager --set-enable
 
 echo "Installing packages"
 # Example setup (customize for your needs)
-dnf install -y git wget vim unzip openssl
+dnf install -y git wget vim unzip openssl cmake g++
 
 # Download erlang binary rpm.
 # rpm -Uvh packages/esl-erlang_28.1_1~centos~8_x86_64.rpm
