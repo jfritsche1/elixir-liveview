@@ -1,0 +1,15 @@
+{
+    "name": "UBI9 Dev Container",
+    "image": "registry.redhat.io/ubi9/ubi:latest",
+  
+    "runArgs": [
+      "--network=host",
+      "-v",
+      "/home/john/repos:/home/john/repos"
+    ],
+  
+    "postCreateCommand": "bash .devcontainer/postCreateCommand.sh",
+  
+    "remoteUser": "root"
+  }
+  

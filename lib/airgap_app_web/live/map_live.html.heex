@@ -1,0 +1,116 @@
+<div class="h-screen flex flex-col bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-gray-200 z-50">
+    <div class="px-4 sm:px-6 lg:px-8 py-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <h1 class="text-xl font-bold text-gray-900">AirGap Map System</h1>
+          <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+            NATS Connected
+          </span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button phx-click="clear_markers" 
+                  class="px-3 py-1.5 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
+            Clear All
+          </button>
+          <button phx-click="toggle_sidebar"
+                  class="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+            <%= if @show_sidebar, do: "Hide", else: "Show" %> Sidebar
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex relative">
+    <!-- Map Container -->
+    <div class="flex-1 relative">
+      <div id="map" 
+           phx-hook="LeafletMap" 
+           phx-update="ignore"
+           class="h-full w-full">
+      </div>
+      
+      <!-- Stats Overlay -->
+      <div class="absolute top-4 right-4 bg-white rounded-lg shadow-lg p-4 z-[400] min-w-[200px]">
+        <h3 class="text-sm font-semibold text-gray-700 mb-2">Statistics</h3>
+        <div class="space-y-1 text-xs">
+          <div class="flex justify-between">
+            <span class="text-gray-600">Markers:</span>
+            <span class="font-medium text-gray-900"><%= @stats.total_markers %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">H3 Cells:</span>
+            <span class="font-medium text-gray-900"><%= @stats.active_cells %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Zoom:</span>
+            <span class="font-medium text-gray-900"><%= @zoom_level %></span>
+          </div>
+          <%= if @stats.last_update do %>
+            <div class="pt-1 mt-1 border-t border-gray-200">
+              <span class="text-gray-500">
+                Updated: <%= Calendar.strftime(@stats.last_update, "%H:%M:%S") %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- H3 Info (when selected) -->
+      <%= if @selected_h3 do %>
+        <div class="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 z-[400] max-w-xs">
+          <h4 class="text-sm font-semibold text-gray-700 mb-1">H3 Cell</h4>
+          <p class="text-xs font-mono text-gray-600 break-all">
+            <%= H3Service.h3_to_string(@selected_h3) %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Sidebar -->
+    <%= if @show_sidebar do %>
+      <div class="w-72 bg-white border-l border-gray-200 overflow-y-auto shadow-lg">
+        <div class="p-4">
+          <h2 class="text-lg font-semibold text-gray-900 mb-3">Recent Markers</h2>
+          
+          <%= if map_size(@markers) == 0 do %>
+            <div class="text-center py-8">
+              <div class="text-gray-400 mb-2">
+                <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                </svg>
+              </div>
+              <p class="text-sm text-gray-500">No active markers</p>
+              <p class="text-xs text-gray-400 mt-1">Waiting for NATS messages...</p>
+            </div>
+          <% else %>
+            <div class="space-y-2">
+              <%= for {id, marker} <- @markers |> Enum.take(15) do %>
+                <div class="bg-gray-50 rounded p-2 hover:bg-gray-100 transition-colors">
+                  <div class="flex items-start justify-between">
+                    <div class="flex-1 min-w-0">
+                      <p class="text-xs font-medium text-gray-900 truncate">
+                        <%= String.slice(id, 0..11) %>
+                      </p>
+                      <p class="text-xs text-gray-600 mt-0.5">
+                        <%= Float.round(marker.lat, 4) %>, <%= Float.round(marker.lon, 4) %>
+                      </p>
+                      <p class="text-xs text-gray-400 mt-0.5">
+                        <%= format_timestamp(marker.timestamp) %>
+                      </p>
+                    </div>
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse mt-1"></span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

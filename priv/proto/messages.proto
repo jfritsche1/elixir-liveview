@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package airgap;
+
+option elixir_module_prefix = "AirgapApp.Proto";
+
+// Location update message for tracking entities
+message LocationUpdate {
+  string id = 1;
+  double latitude = 2;
+  double longitude = 3;
+  int64 timestamp = 4;
+  float altitude = 5;
+  float speed = 6;
+  float heading = 7;
+  float accuracy = 8;
+  string source = 9;
+  map<string, string> metadata = 10;
+}
+
+// Collection of location updates
+message LocationUpdateBatch {
+  repeated LocationUpdate updates = 1;
+  string batch_id = 2;
+  int64 created_at = 3;
+}
+
+// H3 cell information
+message H3Cell {
+  string h3_index = 1;
+  int32 resolution = 2;
+  repeated double center = 3;
+  repeated LocationUpdate entities = 4;
+}
+
+// Request for entities in an area
+message AreaRequest {
+  double min_lat = 1;
+  double min_lon = 2;
+  double max_lat = 3;
+  double max_lon = 4;
+  int32 h3_resolution = 5;
+  int64 since_timestamp = 6;
+}
+
+// Response with entities in an area
+message AreaResponse {
+  repeated H3Cell cells = 1;
+  int32 total_entities = 2;
+  int64 response_timestamp = 3;
+}

@@ -1,0 +1,6 @@
+/* Leaflet CSS placeholder - Run scripts/download_leaflet.sh to download the actual styles */
+.leaflet-container {
+  position: relative;
+  overflow: hidden;
+  background: #ddd;
+}
